@@ -12,7 +12,7 @@ def getBBsToDeploy (projectName) {
 
 def generateStage(server, myYaml, nexusFile) {
     return { 
-        node ('Built-In Node') {
+        node {
             stage ('Prepare variables') {
                 
                 // select BBs which will be installed
@@ -149,7 +149,7 @@ ENDSSH' || exit 1
 }
 // echo sh(script: 'env|sort', returnStdout: true)
 
-node('Built-In Node') {
+node {
     NEXUS_REPOSITORY = "DELIVERYZONE_AMDOCS_RAW"
     GIT_REPOSITORY = "deployvip.internal.vodafone.com:8080/bitbucket/scm/osf/amdocs.git"
     GIT_CREDENTIAL = "jenkins_bitbucket"
