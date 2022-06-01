@@ -142,9 +142,8 @@ ENDSSH' || exit 1
         }
     }
  }
-println NODE_NAME
-println NODE_LABELS
-println ${NODE_LABELS}
+echo sh(script: 'env|sort', returnStdout: true)
+
 node('Built-In Node') {
     NEXUS_REPOSITORY = "DELIVERYZONE_AMDOCS_RAW"
     GIT_REPOSITORY = "deployvip.internal.vodafone.com:8080/bitbucket/scm/osf/amdocs.git"
