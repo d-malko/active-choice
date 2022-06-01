@@ -1,0 +1,117 @@
+ACC:
+  ACC3:
+    OGW:
+      deosa10vr:
+        - host: deosa10vr.dc-ratingen.de
+          account: ogwacc3
+          homeDir: /opt/SP/WEB_DATA/ACC3
+      deosa11vr:
+        - host: deosa11vr.dc-ratingen.de
+          account: ogwacc3
+          homeDir: /opt/SP/WEB_DATA/ACC3
+    O2A:
+      deosa12vr:
+        - name: deosa12vr.dc-ratingen.de
+          account: o2aacc3
+          homeDir: /opt/SP/WEB_DATA/ACC3
+      deosa13vr:
+        - name: deosa13vr.dc-ratingen.de
+          user: o2aacc3
+          homeDir: /opt/SP/WEB_DATA/ACC3
+    #- sshKey:
+    #  account: 
+
+  ACC1:
+    OGW:
+      deosa1hr:
+        - host: deosa1hr.dc-ratingen.de
+          account: ogwint
+          homeDir: /opt/SP/WEB_DATA/INT
+      deosa2hr:
+        - host: deosa2hr.dc-ratingen.de
+          account: ogwint
+          homeDir: /opt/SP/WEB_DATA/INT
+    O2A:
+      deosa3hr:
+        - name: deosa3hr.dc-ratingen.de
+          account: ogwopt
+          homeDir: /opt/SP/WEB_DATA/INT
+      deosa4hr:
+        - name: deosa4hr.dc-ratingen.de
+          account: ogwopt
+          homeDir: /opt/SP/WEB_DATA/INT
+  ACC2:
+    OGW:
+      deosa1hr:
+        - host: deosa1hr.dc-ratingen.de
+          account: ogwint
+          homeDir: /opt/SP/WEB_DATA/OPT
+      deosa2hr:
+        - host: deosa2hr.dc-ratingen.de
+          account: ogwint
+          homeDir: /opt/SP/WEB_DATA/OPT
+    O2A:
+      deosa3hr:
+        - name: deosa3hr.dc-ratingen.de
+          account: ogwopt
+          homeDir: /opt/SP/WEB_DATA/OPT
+      deosa4hr:
+        - name: deosa4hr.dc-ratingen.de
+          account: ogwopt
+          homeDir: /opt/SP/WEB_DATA/OPT
+PRD:
+  PRD:
+    OGW:
+      deosa1hr:
+        - host: deosp1hr.dc-ratingen.de
+          account: ogwprod
+          homeDir: /opt/SP/WEB_DATA
+      deosp2hr:
+        - host: deosp2hr.dc-ratingen.de
+          account: ogwprod
+          homeDir: /opt/SP/WEB_DATA
+      deosp3hr:
+        - host: deosp3hr.dc-ratingen.de
+          account: ogwprod
+          homeDir: /opt/SP/WEB_DATA
+      deosp4hr:
+        - host: deosp4hr.dc-ratingen.de
+          account: ogwprod
+          homeDir: /opt/SP/WEB_DATA
+      deosp5hr:
+        - host: deosp5hr.dc-ratingen.de
+          account: ogwprod
+          homeDir: /opt/SP/WEB_DATA
+      deosp6hr:
+        - host: deosp6hr.dc-ratingen.de
+          account: ogwprod
+          homeDir: /opt/SP/WEB_DATA
+      deosp7hr:
+        - host: deosp7hr.dc-ratingen.de
+          account: ogwprod
+          homeDir: /opt/SP/WEB_DATA
+      deosp8hr:
+        - host: deosp8hr.dc-ratingen.de
+          account: ogwprod
+          homeDir: /opt/SP/WEB_DATA
+      deosp9hr:
+        - host: deosp9hr.dc-ratingen.de
+          account: ogwprod
+          homeDir: /opt/SP/WEB_DATA
+      deosp10hr:
+        - host: deosp10hr.dc-ratingen.de
+          account: ogwprod
+          homeDir: /opt/SP/WEB_DATA
+      deosp11hr:
+        - host: deosp11hr.dc-ratingen.de
+          account: ogwprod
+          homeDir: /opt/SP/WEB_DATA
+    O2A:
+      deosp12hr:
+        - host: deosp12hr.dc-ratingen.de
+          account: o2aprod
+          homeDir: /opt/SP/WEB_DATA
+      deosp13hr:
+        - host: deosp13hr.dc-ratingen.de
+          account: o2aprod
+          homeDir: /opt/SP/WEB_DATA
