@@ -147,6 +147,7 @@ node {
     NEXUS_REPOSITORY = "DELIVERYZONE_AMDOCS_RAW"
     GIT_REPOSITORY = "deployvip.internal.vodafone.com:8080/bitbucket/scm/osf/amdocs.git"
     GIT_CREDENTIAL = "jenkins_bitbucket"
+    def myRepo = checkout scm
 
     
     // def INT_DEPLOY_HOST = ""
