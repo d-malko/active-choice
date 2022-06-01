@@ -142,7 +142,12 @@ ENDSSH' || exit 1
         }
     }
  }
-echo sh(script: 'env|sort', returnStdout: true)
+
+ node {
+    echo sh(returnStdout: true, script: 'env')
+    // ...
+}
+// echo sh(script: 'env|sort', returnStdout: true)
 
 node('Built-In Node') {
     NEXUS_REPOSITORY = "DELIVERYZONE_AMDOCS_RAW"
