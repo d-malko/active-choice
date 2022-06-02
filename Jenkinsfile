@@ -404,7 +404,7 @@ if (dryRun.equals('disable')){
     def repository = "AMDOCS_RAW"
     def jenkinsCredential = "jenkins_nexus"
 
-    return getNexusRelease(nexusUrl, repository, jenkinsCredentialTest)
+    return getNexusRelease(nexusUrl, repository, "jenkins_nexus")
 } else {
     return ['disabled:disabled']
 }""".stripIndent()
