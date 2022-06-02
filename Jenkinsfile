@@ -159,7 +159,7 @@ node {
     //http://192.168.5.15:32712/service/rest/repository/browse/
     def nexusUrlTest = "http://192.168.5.15:32712/service/rest/repository/browse/"
     def repositoryTest = "AMDOCS_RAW"
-    def jenkinsCredentialTest = 'jenkins_nexus'
+    def jenkinsCredentialTest = "jenkins_nexus"
     def nexusUrl = "\$nexusUrl"
     def repository = "\$repository"
     def projectName = "\$projectName"
@@ -536,7 +536,7 @@ if (dryRun.equals('disable')){
         // withVault([configuration: configuration, vaultSecrets: secrets]) {
             // writeFile file: "ogw_o2a_ssh_key", text: env.SSH_KEY
             // sh 'chmod 600 ./ogw_o2a_ssh_key'
-        }
+        // }
         if (params.allServers == 'all'){
             servers =  myYaml.get(params.OP_ENVIRONMENT_TYPE).get(params.OP_ENVIRONMENT).get(params.projectName).keySet() as ArrayList    
         } else {
