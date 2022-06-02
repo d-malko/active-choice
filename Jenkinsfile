@@ -157,6 +157,9 @@ node {
     def hostValues
     def deliveryPath = ""
     //http://192.168.5.15:32712/service/rest/repository/browse/
+    def nexusUrlTest = "http://192.168.5.15:32712/service/rest/repository/browse/"
+    def repositoryTest = "AMDOCS_RAW"
+    def jenkinsCredentialTest = 'jenkins_nexus'
     def nexusUrl = "\$nexusUrl"
     def repository = "\$repository"
     def projectName = "\$projectName"
@@ -483,6 +486,7 @@ if (dryRun.equals('disable')){
       if (params.dryRun == 'enable'){
         stage("Dry Run") {
             println example('example', 'example')
+            println getNexusRelease(nexusUrlTest, repositoryTest, jenkinsCredentialTest)
             
         
             // def myYaml = readYaml file: "${WORKSPACE}/servers.yaml"
