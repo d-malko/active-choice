@@ -1,5 +1,3 @@
-// @Library("jenkins_common@main") _
-
 @NonCPS
 def getBBsToDeploy (projectName) {
   if (projectName == "OGW")
@@ -484,9 +482,8 @@ if (dryRun.equals('disable')){
 
       if (params.dryRun == 'enable'){
         stage("Dry Run") {
-            println getNexusRelease('release', '2')
-            println getNexusBuild('build', '2')
-
+            println example('example', 'example')
+            
         
             // def myYaml = readYaml file: "${WORKSPACE}/servers.yaml"
             println("This is a Dry Run")
