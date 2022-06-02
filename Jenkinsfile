@@ -529,9 +529,9 @@ if (dryRun.equals('disable')){
         def secrets = [[path: 'kv-jenkins-pipeline-OSF/ogw_o2a_private_key', secretValues: [[envVar: 'SSH_KEY', vaultKey: 'ssh_key']] ]]
 
         // hashicorp Part 2 - Retrieve key from  hashicorp vault and save key in temporary key file in workspace
-        withVault([configuration: configuration, vaultSecrets: secrets]) {
-            writeFile file: "ogw_o2a_ssh_key", text: env.SSH_KEY
-            sh 'chmod 600 ./ogw_o2a_ssh_key'
+        // withVault([configuration: configuration, vaultSecrets: secrets]) {
+            // writeFile file: "ogw_o2a_ssh_key", text: env.SSH_KEY
+            // sh 'chmod 600 ./ogw_o2a_ssh_key'
         }
         if (params.allServers == 'all'){
             servers =  myYaml.get(params.OP_ENVIRONMENT_TYPE).get(params.OP_ENVIRONMENT).get(params.projectName).keySet() as ArrayList    
