@@ -396,31 +396,15 @@ if(OP_ENVIRONMENT?.trim()){
                                     ],
                                     script: [
                                         classpath: [],
-                                        sandbox: false,
+                                        sandbox: true,
                                         script: """// DenisMalko 10:04 24 may 22
-import jenkins.*
-import jenkins.model.* 
-import hudson.*
-import hudson.model.*
-import org.jsoup.*
+
 if (dryRun.equals('disable')){                                        
     def nexusUrl = "http://192.168.5.15:32712/service/rest/repository/browse/"
     def repository = "AMDOCS_RAW"
-    def fullUrl  = "$nexusUrl$repository/$projectName/"
-    def jenkinsCredentials = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
-            com.cloudbees.plugins.credentials.Credentials.class,
-            Jenkins.instance,
-            null,
-            null
-    );
-    def cred = jenkinsCredentials.find {it.id == 'jenkins_nexus'}
-    def authString = "$cred.username:$cred.password".getBytes().encodeBase64().toString()
-    def doc = Jsoup
-    .connect(fullUrl)
-    .header("Authorization", "Basic " + authString)
-    .get();
-    def elements = doc.select("table > tbody > tr > td > a").text().findAll(~/\\b(?!Parent|Directory)(\\w+)/);
-    return elements.sort().reverse()
+    def jenkinsCredential = "jenkins_nexus"
+
+    return getNexusRelease(nexusUrl, repository, jenkinsCredentialTest)
 } else {
     return ['disabled:disabled']
 }""".stripIndent()
