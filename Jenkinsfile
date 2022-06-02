@@ -1,4 +1,4 @@
-@Library("jenkins_common@main") _
+// @Library("jenkins_common@main") _
 
 @NonCPS
 def getBBsToDeploy (projectName) {
