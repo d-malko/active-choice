@@ -144,9 +144,9 @@ ENDSSH' || exit 1
  }
 
 node {
-    NEXUS_REPOSITORY = "DELIVERYZONE_AMDOCS_RAW"
-    GIT_REPOSITORY = "deployvip.internal.vodafone.com:8080/bitbucket/scm/osf/amdocs.git"
-    GIT_CREDENTIAL = "jenkins_bitbucket"
+    NEXUS_REPOSITORY = "AMDOCS_RAW"
+    // GIT_REPOSITORY = "deployvip.internal.vodafone.com:8080/bitbucket/scm/osf/amdocs.git"
+    // GIT_CREDENTIAL = "jenkins_bitbucket"
     def myRepo = checkout scm
 
     
@@ -158,6 +158,7 @@ node {
     def BBs_TO_DEPLOY
     def hostValues
     def deliveryPath = ""
+    //http://192.168.5.15:32712/service/rest/repository/browse/
     def nexusUrl = "\$nexusUrl"
     def repository = "\$repository"
     def projectName = "\$projectName"
@@ -166,10 +167,10 @@ node {
     def myYaml = readYaml file: "${env.WORKSPACE}/servers.yaml"
     if (params.projectName == "SKY") {
         nexusFile="${params.projectName}-V${params.wave}-${params.build}.zip"
-        nexusPath="https://deployvip.dc-ratingen.de:8080/nexus/repository/DELIVERYZONE_AMDOCS_RAW/${params.projectName}/V${params.wave}/"
+        nexusPath="http://192.168.5.15:32712/repository/${NEXUS_REPOSITORY}/${params.projectName}/V${params.wave}/"
     } else {
         nexusFile="${params.projectName}-${params.wave}-${params.build}.zip"
-        nexusPath="https://deployvip.dc-ratingen.de:8080/nexus/repository/DELIVERYZONE_AMDOCS_RAW/${params.projectName}/${params.wave}/"
+        nexusPath="http://192.168.5.15:32712/repository/${NEXUS_REPOSITORY}/${params.projectName}/${params.wave}/"
     }
     println ("NexusFile: $nexusFile")
     println ("NexusPath: $nexusPath")
@@ -402,7 +403,7 @@ import hudson.*
 import hudson.model.*
 import org.jsoup.*
 if (dryRun.equals('disable')){                                        
-    def nexusUrl = "https://deploy-aws.internal.vodafone.com/nexus/service/rest/repository/browse/"
+    def nexusUrl = "http://192.168.5.15:32712/service/rest/repository/browse/"
     def repository = "AMDOCS_RAW"
     def fullUrl  = "$nexusUrl$repository/$projectName/"
     def jenkinsCredentials = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
@@ -437,7 +438,7 @@ if (dryRun.equals('disable')){
                                     $class: 'GroovyScript',
                                     fallbackScript: [
                                         classpath: [],
-                                        sandbox: false,
+                                        sandbox: true,
                                         script: 'return ["error"]'
                                     ],
                                     script: [
@@ -450,7 +451,7 @@ import hudson.*
 import hudson.model.*
 import org.jsoup.*
 if (dryRun.equals('disable')){  
-    def nexusUrl = "https://deploy-aws.internal.vodafone.com/nexus/service/rest/repository/browse/"
+    def nexusUrl = "http://192.168.5.15:32712/service/rest/repository/browse/"
     def repository = "AMDOCS_RAW"
     def fullUrl  = "$nexusUrl$repository/$projectName/$wave/"
     def jenkinsCredentials = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
