@@ -429,12 +429,7 @@ if (dryRun.equals('disable')){
                                     script: [
                                         classpath: [],
                                         sandbox: false,
-                                        script: """// DenisMalko 10:05 24 may 22
-import jenkins.*
-import jenkins.model.* 
-import hudson.*
-import hudson.model.*
-import org.jsoup.*
+                                        script: """import org.jsoup.*
 if (dryRun.equals('disable')){  
     def nexusUrl = 'http://192.168.5.15:32712/service/rest/repository/browse/'
     def repository = 'AMDOCS_RAW'
