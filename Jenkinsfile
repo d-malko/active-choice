@@ -455,7 +455,7 @@ if (dryRun.equals('disable')){
     return elements.sort().reverse()
 } else {
     return ['disabled:disabled']
-}'''.stripIndent()     
+}""".stripIndent()     
                                     ]
                                 ]
                             ]
