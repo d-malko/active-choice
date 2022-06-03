@@ -436,9 +436,9 @@ import hudson.*
 import hudson.model.*
 import org.jsoup.*
 if (dryRun.equals('disable')){  
-    def nexusUrl = "http://192.168.5.15:32712/service/rest/repository/browse/"
-    def repository = "AMDOCS_RAW"
-    def fullUrl  = "$nexusUrl$repository/$projectName/$wave/"
+    def nexusUrl = 'http://192.168.5.15:32712/service/rest/repository/browse/'
+    def repository = 'AMDOCS_RAW'
+    def fullUrl  = '$nexusUrl$repository/$projectName/$wave/'
     def jenkinsCredentials = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
             com.cloudbees.plugins.credentials.Credentials.class,
             Jenkins.instance,
@@ -446,16 +446,16 @@ if (dryRun.equals('disable')){
             null
     );
     def cred = jenkinsCredentials.find {it.id == 'jenkins_nexus'}
-    def authString = "$cred.username:$cred.password".getBytes().encodeBase64().toString()
+    def authString = '$cred.username:$cred.password'.getBytes().encodeBase64().toString()
     def doc = Jsoup
     .connect(fullUrl)
-    .header("Authorization", "Basic " + authString)
+    .header('Authorization', 'Basic ' + authString)
     .get();
-    def elements = doc.select("table > tbody > tr > td > a:contains($projectName-$wave)").text().findAll(~/\\d+(?=\\.zip)/);
+    def elements = doc.select('table > tbody > tr > td > a:contains($projectName-$wave)').text().findAll(~/\\d+(?=\\.zip)/);
     return elements.sort().reverse()
 } else {
     return ['disabled:disabled']
-}""".stripIndent()     
+}'''.stripIndent()     
                                     ]
                                 ]
                             ]
