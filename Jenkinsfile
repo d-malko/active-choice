@@ -396,7 +396,7 @@ if(OP_ENVIRONMENT?.trim()){
                                     ],
                                     script: [
                                         classpath: [],
-                                        sandbox: true,
+                                        sandbox: false,
                                         script: """import org.jsoup.*
 if (dryRun.equals('disable')){  
     def nexusUrl = 'http://192.168.5.15:32712/service/rest/repository/browse/'
