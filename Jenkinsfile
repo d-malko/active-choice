@@ -457,7 +457,7 @@ if (dryRun.equals('disable')){
     .connect(fullUrl)
     .header('Authorization', 'Basic ' + authString)
     .get();
-    def elements = doc.select('table > tbody > tr > td > a:contains($projectName-$wave)').text().findAll(~/\d+(?=\.zip)/);
+    def elements = doc.select('table > tbody > tr > td > a:contains($projectName-$wave)').text().findAll(~/\\d+(?=\.zip)/);
     return elements.sort().reverse()
 } else {
     return ['disabled:disabled']
