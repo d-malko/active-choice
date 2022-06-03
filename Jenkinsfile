@@ -397,7 +397,7 @@ if(OP_ENVIRONMENT?.trim()){
                                     script: [
                                         classpath: [],
                                         sandbox: true,
-                                        script: """/import org.jsoup.*
+                                        script: """import org.jsoup.*
 if (dryRun.equals('disable')){  
     def nexusUrl = 'http://192.168.5.15:32712/service/rest/repository/browse/'
     def repository = 'AMDOCS_RAW'
