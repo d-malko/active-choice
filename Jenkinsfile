@@ -414,7 +414,7 @@ if (dryRun.equals('disable')){
     .connect(fullUrl)
     .header('Authorization', 'Basic ' + authString)
     .get();
-    def elements = doc.select('table > tbody > tr > td > a').text().findAll(~/\b(?!Parent|Directory)(\w+)/);
+    def elements = doc.select('table > tbody > tr > td > a').text().findAll(~/\\b(?!Parent|Directory)(\\w+)/);
     return elements.sort().reverse()
 } else {
     return ['disabled:disabled']
