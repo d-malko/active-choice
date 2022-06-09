@@ -386,7 +386,7 @@ if(OP_ENVIRONMENT?.trim()){
                                         sandbox: false,
                                         script: """// DenisMalko 10:04 24 may 22
 import org.jsoup.*
-if (dryRun.equals('disable') || stage.contains('unzip')) {                                        
+if (dryRun.equals('disable') && stage.contains('unzip')) {                                        
     def nexusUrl = "https://deploy-aws.internal.vodafone.com/nexus/service/rest/repository/browse/"
     def repository = "AMDOCS_RAW"
     def fullUrl  = "$nexusUrl$repository/$projectName/"
@@ -430,7 +430,7 @@ if (dryRun.equals('disable') || stage.contains('unzip')) {
                                         sandbox: false,
                                         script: """// DenisMalko 10:05 24 may 22
 import org.jsoup.*
-if (dryRun.equals('disable') || stage.contains('unzip')) {  
+if (dryRun.equals('disable') && stage.contains('unzip')) {  
     def nexusUrl = "https://deploy-aws.internal.vodafone.com/nexus/service/rest/repository/browse/"
     def repository = "AMDOCS_RAW"
     def fullUrl  = "$nexusUrl$repository/$projectName/$releaseName/"
