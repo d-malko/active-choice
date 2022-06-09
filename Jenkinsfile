@@ -10,7 +10,7 @@ def getBBsToDeploy (projectName) {
 
 def generateStage(server, myYaml, nexusFile) {
     return { 
-        node {
+        node ('master') {
             stage ('Prepare variables') {
                 
                 // select BBs which will be installed
@@ -41,7 +41,7 @@ ENDSSH' || exit 1
                 // create name and url to dowload from nexus
                 
             }
-            if (params.OP_ENVIRONMENT == 'ACC3') {
+            if (params.OP_ENVIRONMENT == 'ACC3' || params.OP_ENVIRONMENT == 'ACC3') {
                 if (params.stage.contains('unzip')){
                     stage ('Unzip on server: $params.OP_ENVIRONMENT') {               
                         sh """          
@@ -132,7 +132,7 @@ ENDSSH' || exit 1
                         echo "Setup ${params.OP_ENVIRONMENT_TYPE} environment"
                         // sh "export HOME=${hostValues.homeDir.first()}; cd ~; echo $PATH"
                         echo "Running build execute script with parameters"
-                        def confirmDialog = "Deploy project ${params.projectName} on ${params.OP_ENVIRONMENT} and server ${hostValues.host.first()} using wave: ${params.wave},  build: ${params.build}  and user ${hostValues.account.first()}"
+                        def confirmDialog = "Deploy project ${params.projectName} on ${params.OP_ENVIRONMENT} and server ${hostValues.host.first()} using releaseName: ${params.releaseName},  BuildNumber: ${params.BuildNumber}  and user ${hostValues.account.first()}"
                         releaseApprover = input message: confirmDialog,
                         submitterParameter: 'releaseApprover'
                         echo "${releaseApprover} is releasing ${params.projectName}"
@@ -141,37 +141,24 @@ ENDSSH' || exit 1
     }
  }
 
-node {
-    NEXUS_REPOSITORY = "AMDOCS_RAW"
-    // GIT_REPOSITORY = "deployvip.internal.vodafone.com:8080/bitbucket/scm/osf/amdocs.git"
-    // GIT_CREDENTIAL = "jenkins_bitbucket"
-    def myRepo = checkout scm
-
-    
-    // def INT_DEPLOY_HOST = ""
-    // def INT_DEPLOY_ACCOUNT = ""
+node('master') {
+   
     def servers
     def nexusFile
     def nexusPath
     def BBs_TO_DEPLOY
     def hostValues
-    def deliveryPath = ""
-    //http://192.168.5.15:32712/service/rest/repository/browse/
-    def nexusUrlTest = "http://192.168.5.15:32712/service/rest/repository/browse/"
-    def repositoryTest = "AMDOCS_RAW"
-    def jenkinsCredentialTest = "jenkins_nexus"
     def nexusUrl = "\$nexusUrl"
     def repository = "\$repository"
     def projectName = "\$projectName"
-    def wave = "\$wave"
-    def cred = [username:"\$cred.username",password:"\$cred.password"]
+    def releaseName = "\$releaseName"
     def myYaml = readYaml file: "${env.WORKSPACE}/servers.yaml"
     if (params.projectName == "SKY") {
-        nexusFile="${params.projectName}-V${params.wave}-${params.build}.zip"
-        nexusPath="http://192.168.5.15:32712/repository/${NEXUS_REPOSITORY}/${params.projectName}/V${params.wave}/"
+        nexusFile="${params.projectName}-V${params.releaseName}-${params.BuildNumber}.zip"
+        nexusPath="https://deployvip.dc-ratingen.de:8080/nexus/repository/DELIVERYZONE_AMDOCS_RAW/${params.projectName}/V${params.releaseName}/"
     } else {
-        nexusFile="${params.projectName}-${params.wave}-${params.build}.zip"
-        nexusPath="http://192.168.5.15:32712/repository/${NEXUS_REPOSITORY}/${params.projectName}/${params.wave}/"
+        nexusFile="${params.projectName}-${params.releaseName}-${params.BuildNumber}.zip"
+        nexusPath="https://deployvip.dc-ratingen.de:8080/nexus/repository/DELIVERYZONE_AMDOCS_RAW/${params.projectName}/${params.releaseName}/"
     }
     println ("NexusFile: $nexusFile")
     println ("NexusPath: $nexusPath")
@@ -273,6 +260,33 @@ node {
                             ],
                             [   $class: 'CascadeChoiceParameter',
                                 choiceType: 'PT_SINGLE_SELECT',
+                                description: 'Select the project to deploy',
+                                filterLength: 1,
+                                filterable: true,
+                                name: 'projectName',
+                                randomName: 'choice-parameter-qweqweqwesd324326',
+                                referencedParameters: 'OP_ENVIRONMENT,OP_ENVIRONMENT_TYPE,allServers',
+                                script: [
+                                    $class: 'GroovyScript',
+                                    fallbackScript: [
+                                        classpath: [],
+                                        sandbox: true,
+                                        script: 'return ["error"]'
+                                    ],
+                                    script: [
+                                        classpath: [],
+                                        sandbox: true,
+                                        script: """def venv = ${myYaml.inspect()}
+if(OP_ENVIRONMENT?.trim()){
+    return venv.get(OP_ENVIRONMENT_TYPE).get(OP_ENVIRONMENT).keySet() as ArrayList
+} else {
+        return []
+}""".stripIndent()
+                                    ]
+                                ]
+                            ],
+                            [   $class: 'CascadeChoiceParameter',
+                                choiceType: 'PT_SINGLE_SELECT',
                                 description: 'Which sub environment you want to deploy?',
                                 filterLength: 1,
                                 filterable: true,
@@ -302,33 +316,6 @@ node {
                                 ]
                             ], 
                             [   $class: 'CascadeChoiceParameter',
-                                choiceType: 'PT_SINGLE_SELECT',
-                                description: 'Select the project to deploy',
-                                filterLength: 1,
-                                filterable: true,
-                                name: 'projectName',
-                                randomName: 'choice-parameter-qweqweqwesd324326',
-                                referencedParameters: 'OP_ENVIRONMENT,OP_ENVIRONMENT_TYPE,allServers',
-                                script: [
-                                    $class: 'GroovyScript',
-                                    fallbackScript: [
-                                        classpath: [],
-                                        sandbox: true,
-                                        script: 'return ["error"]'
-                                    ],
-                                    script: [
-                                        classpath: [],
-                                        sandbox: true,
-                                        script: """def venv = ${myYaml.inspect()}
-if(OP_ENVIRONMENT?.trim()){
-    return venv.get(OP_ENVIRONMENT_TYPE).get(OP_ENVIRONMENT).keySet() as ArrayList
-} else {
-        return []
-}""".stripIndent()
-                                    ]
-                                ]
-                            ],
-                            [   $class: 'CascadeChoiceParameter',
                                 choiceType: 'PT_MULTI_SELECT',
                                 description: 'Which server you want to use for deployment?',
                                 filterLength: 1,
@@ -346,17 +333,17 @@ if(OP_ENVIRONMENT?.trim()){
                                     script: [
                                         classpath: [],
                                         sandbox: true,
-                                        script: """if (allServers != 'all') {
-                                        def venv = ${myYaml.inspect()}
+                                        script: """if (!allServers.contains('all')) {
+    def venv = ${myYaml.inspect()}
 
-                                        if(OP_ENVIRONMENT?.trim()){
-                                            return venv.get(OP_ENVIRONMENT_TYPE).get(OP_ENVIRONMENT).get(projectName).keySet() as ArrayList
-                                        } else {
-                                            return []
-                                        }
-                                        } else {
-                                            return ['disabled:disabled']
-                                        }""".stripIndent()
+    if(OP_ENVIRONMENT?.trim()){
+        return venv.get(OP_ENVIRONMENT_TYPE).get(OP_ENVIRONMENT).get(projectName).keySet() as ArrayList
+    } else {
+        return []
+    }
+} else {
+    return ['disabled:disabled']
+}""".stripIndent()
                                     ]
                                 ]
                             ], 
@@ -381,10 +368,10 @@ if(OP_ENVIRONMENT?.trim()){
                             ],
                             [   $class: 'CascadeChoiceParameter',
                                 choiceType: 'PT_SINGLE_SELECT',
-                                description: 'Select needed wave for the deployment',
+                                description: 'Select needed releaseName for the deployment',
                                 filterLength: 1,
                                 filterable: true,
-                                name: 'wave',
+                                name: 'releaseName',
                                 randomName: 'choice-parameter-qweqweqwesd324327',
                                 referencedParameters: 'stage,projectName,dryRun',
                                 script: [
@@ -397,11 +384,12 @@ if(OP_ENVIRONMENT?.trim()){
                                     script: [
                                         classpath: [],
                                         sandbox: false,
-                                        script: """import org.jsoup.*
-if (dryRun.equals('disable')){  
-    def nexusUrl = 'http://192.168.5.15:32712/service/rest/repository/browse/'
-    def repository = 'AMDOCS_RAW'
-    def fullUrl  = '$nexusUrl$repository/$projectName/$wave/'
+                                        script: """// DenisMalko 10:04 24 may 22
+import org.jsoup.*
+if (dryRun.equals('disable') || stage.contains('unzip')) {                                        
+    def nexusUrl = "https://deploy-aws.internal.vodafone.com/nexus/service/rest/repository/browse/"
+    def repository = "AMDOCS_RAW"
+    def fullUrl  = "$nexusUrl$repository/$projectName/"
     def jenkinsCredentials = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
             com.cloudbees.plugins.credentials.Credentials.class,
             Jenkins.instance,
@@ -409,12 +397,12 @@ if (dryRun.equals('disable')){
             null
     );
     def cred = jenkinsCredentials.find {it.id == 'jenkins_nexus'}
-    def authString = '$cred.username:$cred.password'.getBytes().encodeBase64().toString()
+    def authString = "$cred.username:$cred.password".getBytes().encodeBase64().toString()
     def doc = Jsoup
     .connect(fullUrl)
-    .header('Authorization', 'Basic ' + authString)
+    .header("Authorization", "Basic " + authString)
     .get();
-    def elements = doc.select('table > tbody > tr > td > a').text().findAll(~/(?!Parent|Directory)(\\w+)/);
+    def elements = doc.select("table > tbody > tr > td > a").text().findAll(~/\\b(?!Parent|Directory)(\\w+)/);
     return elements.sort().reverse()
 } else {
     return ['disabled:disabled']
@@ -427,24 +415,25 @@ if (dryRun.equals('disable')){
                                 description: 'Select needed build number for the deployment',
                                 filterLength: 1,
                                 filterable: true,
-                                name: 'build',
+                                name: 'BuildNumber',
                                 randomName: 'choice-parameter-qweqweqwesd324328',
-                                referencedParameters: 'stage,wave,projectName,dryRun',
+                                referencedParameters: 'stage,releaseName,projectName,dryRun',
                                 script: [
                                     $class: 'GroovyScript',
                                     fallbackScript: [
                                         classpath: [],
-                                        sandbox: true,
+                                        sandbox: false,
                                         script: 'return ["error"]'
                                     ],
                                     script: [
                                         classpath: [],
                                         sandbox: false,
-                                        script: """import org.jsoup.*
-if (dryRun.equals('disable')){  
-    def nexusUrl = 'http://192.168.5.15:32712/service/rest/repository/browse/'
-    def repository = 'AMDOCS_RAW'
-    def fullUrl  = '$nexusUrl$repository/$projectName/$wave/'
+                                        script: """// DenisMalko 10:05 24 may 22
+import org.jsoup.*
+if (dryRun.equals('disable') || stage.contains('unzip')) {  
+    def nexusUrl = "https://deploy-aws.internal.vodafone.com/nexus/service/rest/repository/browse/"
+    def repository = "AMDOCS_RAW"
+    def fullUrl  = "$nexusUrl$repository/$projectName/$releaseName/"
     def jenkinsCredentials = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
             com.cloudbees.plugins.credentials.Credentials.class,
             Jenkins.instance,
@@ -452,12 +441,12 @@ if (dryRun.equals('disable')){
             null
     );
     def cred = jenkinsCredentials.find {it.id == 'jenkins_nexus'}
-    def authString = '$cred.username:$cred.password'.getBytes().encodeBase64().toString()
+    def authString = "$cred.username:$cred.password".getBytes().encodeBase64().toString()
     def doc = Jsoup
     .connect(fullUrl)
-    .header('Authorization', 'Basic ' + authString)
+    .header("Authorization", "Basic " + authString)
     .get();
-    def elements = doc.select('table > tbody > tr > td > a:contains($projectName-$wave)').text().findAll(~/\\d+(?=\\.zip)/);
+    def elements = doc.select("table > tbody > tr > td > a:contains($projectName-$releaseName)").text().findAll(~/\\d+(?=\\.zip)/);
     return elements.sort().reverse()
 } else {
     return ['disabled:disabled']
@@ -475,10 +464,7 @@ if (dryRun.equals('disable')){
 
       if (params.dryRun == 'enable'){
         stage("Dry Run") {
-            println example('example', 'example')
-            println getNexusRelease(nexusUrlTest, repositoryTest, jenkinsCredentialTest)
-            
-        
+
             // def myYaml = readYaml file: "${WORKSPACE}/servers.yaml"
             println("This is a Dry Run")
             def projects = myYaml.get(params.OP_ENVIRONMENT_TYPE).get(params.OP_ENVIRONMENT)
@@ -496,10 +482,6 @@ if (dryRun.equals('disable')){
             currentBuild.result = "ABORTED" // DRY_RUN
         } 
     } 
-    // else {
-    //     echo "Skiped"
-    //     // Utils.markStageSkippedForConditional('DryRun')
-    // }
     
     stage("Download artifacts from Nexus") {
         if (params.stage.contains('unzip')){
@@ -519,24 +501,24 @@ if (dryRun.equals('disable')){
     }
     stage("Deploy components") {
         // hashicorp Part 1 - definition of hashicorp vault variable
-        // def configuration = [vaultCredentialId: 'OSF-vault-credential', skipSslVerification: true]
-        // def secrets = [[path: 'kv-jenkins-pipeline-OSF/ogw_o2a_private_key', secretValues: [[envVar: 'SSH_KEY', vaultKey: 'ssh_key']] ]]
+        def configuration = [vaultCredentialId: 'OSF-vault-credential', skipSslVerification: true]
+        def secrets = [[path: 'kv-jenkins-pipeline-OSF/ogw_o2a_private_key', secretValues: [[envVar: 'SSH_KEY', vaultKey: 'ssh_key']] ]]
 
         // hashicorp Part 2 - Retrieve key from  hashicorp vault and save key in temporary key file in workspace
-        // withVault([configuration: configuration, vaultSecrets: secrets]) {
-            // writeFile file: "ogw_o2a_ssh_key", text: env.SSH_KEY
-            // sh 'chmod 600 ./ogw_o2a_ssh_key'
-        // }
-        // if (params.allServers == 'all'){
-        //     servers =  myYaml.get(params.OP_ENVIRONMENT_TYPE).get(params.OP_ENVIRONMENT).get(params.projectName).keySet() as ArrayList    
-        // } else {
-        //     servers = params.serverName.split(',') // TODO check if working
-        // }
+        withVault([configuration: configuration, vaultSecrets: secrets]) {
+            writeFile file: "ogw_o2a_ssh_key", text: env.SSH_KEY
+            sh 'chmod 600 ./ogw_o2a_ssh_key'
+        }
+        if (params.allServers == 'all'){
+            servers =  myYaml.get(params.OP_ENVIRONMENT_TYPE).get(params.OP_ENVIRONMENT).get(params.projectName).keySet() as ArrayList    
+        } else {
+            servers = params.serverName.split(',') // TODO check if working
+        }
 
-        // def parallelStagesMap = servers.collectEntries {
-        //                         ["${it}" : generateStage(it, myYaml, nexusFile)]
-        //                     }
-        // parallel parallelStagesMap 
+        def parallelStagesMap = servers.collectEntries {
+                                ["${it}" : generateStage(it, myYaml, nexusFile)]
+                            }
+        parallel parallelStagesMap 
     }
                 
         println "This will run only if successful"
